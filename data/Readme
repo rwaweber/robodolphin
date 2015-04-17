@@ -1,0 +1,18 @@
+Some test data for project 1, Robot Dolphin Rodeo
+
+g0 - a cycle: all nodes are both bases and sponges.
+g1 - several bases, one sponge.
+g2 - one base, several sponges.
+g3 - no bases, some sponges (more than one source component)
+g4 - some bases, no sponges (more than one sink component)
+g5 - no bases or sponges
+g6a - no edges, one vertex
+g6b - no edges, several vertices
+g6c - n = 2, m = 1
+
+g7 - larger example (still works with MAXV = 100)
+g8 - another larger example (still works with MAXV = 100)
+
+//g9 - Huge example to come later (will need larger MAXV)
+g7raw - ignore it
+Readme - this file

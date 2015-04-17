@@ -1,5 +1,5 @@
 all:
-	gcc -Wall -g rodos.c graph.o strong.o stack.o queue.o bfs-dfs.o -o rodograph
+	gcc -Wall -g rodos.c graph.o stack.o queue.o bfs-dfs.o -o rodograph
 
 object:
 	gcc graph.c -c
