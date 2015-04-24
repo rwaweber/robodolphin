@@ -15,6 +15,8 @@ int scc[MAXV+1];		/* strong component number for each vertex */
 
 stack active;			/* active vertices of unassigned component */
 int components_found;		/* number of strong components identified */
+graph strong; 			/* Strong components graph */
+
 
 void process_vertex_early(int v)
 {
@@ -30,8 +32,16 @@ void process_vertex_late(int v)
   /*printf("exit vertex %d at time %d\n",v, exit_time[v]);*/
   if (low[v] == v) {
     /* edge (parent[v],v) cuts off scc */
+    int outgoing, incoming;
+    //THIS MEANS THAT THIS IS AN OUTGOING EDGE FROM AN SCC SO
+    // SO parent[v] component points to v's component
+    //find SCC OF p[v] and v then put in a SCCpv -> SCCv edge if none exists
     /*printf("strong commonent started backtracking from %d\n",v);*/
     pop_component(v);
+    outgoing =  find_strong_id(parent[v]);//this probably won't work
+    incoming = find_strong_id(v);
+    //create the node v within the SCC graph with an edge from o to i
+    strong.insert_edge(/*blahblahblah*/);
   }
   if (entry_time[low[v]] < entry_time[low[parent[v]]])
     low[parent[v]] = low[v];
@@ -39,19 +49,28 @@ void process_vertex_late(int v)
   return;
 }
 
+int find_strong_id(int n){
+   if(scc[n] != NULL && n <= g->nvertices){
+      return(scc[n]);
+   }
+   return(-1);
+}
+
 pop_component(int v)
 {
+  
+  //this method doesn't happen till after a component is found. 
   int t;
   /* vertex placeholder */
 
   components_found = components_found + 1;
   printf("%d is in component %d \n",v,components_found);
-
+    
   scc[ v ] = components_found;
   while ((t = pop(&active)) != v) {
     scc[ t ] = components_found;
     printf("%d is in component %d with %d \n",t,components_found,v);
-  }
+  }//this be where we place all the new graphmaking stuff (probs)
 }
 
 int process_edge(int x, int y)
@@ -60,10 +79,10 @@ int process_edge(int x, int y)
 
   class = edge_classification(x,y);
   printf("(%d,%d) class %d\n", x,y,class);
-
+ 
   if (class == BACK) {
     if (entry_time[y] < entry_time[ low[x] ] )
-      low[x] = y;
+      low[x] = y;//place something in the new graph?
     return;
     printf("process BACK (%d,%d) low[%d]=%d  low[%d]=%d\n",x,y,x,low[x],y,low[y]);
   }
@@ -71,7 +90,7 @@ int process_edge(int x, int y)
   if (class == CROSS) {
     if (scc[y] == -1)	/* component not yet assigned */
       if (entry_time[y] < entry_time[ low[x] ] )
-	low[x] = y;
+	low[x] = y;//place stuff in the new graph?
     return;
     printf("process CROSS (%d,%d) low[%d]=%d  low[%d]=%d\n",x,y,x,low[x],y,low[y]);
   }
@@ -82,7 +101,7 @@ int process_edge(int x, int y)
 void strong_components(graph *g)
 {
   int i;				/* counter */
-  graph simple; //newly created graph of strongly connected components
+  //graph simple; //newly created graph of strongly connected components
 
   
   
@@ -110,7 +129,7 @@ void strong_components(graph *g)
 /* ########################## User created methods ########################## */
 
 //Identify single, cyclic components_found, and then print those same components
-int id_one_component(graph *g)
+/*int id_one_component(graph *g)
 {
   int i;
   if (components_found == 1)
@@ -133,7 +152,7 @@ int id_one_component(graph *g)
   else
     return 0;
 }
-
+*/
 
 // Identify multiple component graphs, and then determine their sinks and sponges
 int id_mul_component(graph *g)
@@ -157,8 +176,8 @@ int main(int argc, char* argv[])
 
   strong_components(&g);
   
-  if(id_one_component(&g))
-    printf("All of the above vertices are Sources and Sponges because there is only one component.\n");
+  //if(id_one_component(&g))
+  //  printf("All of the above vertices are Sources and Sponges because there is only one component.\n");
   
       
   return 0;
