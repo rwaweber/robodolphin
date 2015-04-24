@@ -15,8 +15,8 @@ int scc[MAXV+1];		/* strong component number for each vertex */
 
 stack active;			/* active vertices of unassigned component */
 int components_found;		/* number of strong components identified */
-graph strong; 			/* Strong components graph */
-
+graph strongForward; 			/* Strong components graph */
+graph strongBackward;
 
 void process_vertex_early(int v)
 {
@@ -29,7 +29,8 @@ void process_vertex_early(int v)
 
 void process_vertex_late(int v)
 {
-  /*printf("exit vertex %d at time %d\n",v, exit_time[v]);*/
+// printf("exit vertex %d at time %d\n",v, exit_time[v]);
+//  fflush(stdout);
   if (low[v] == v) {
     /* edge (parent[v],v) cuts off scc */
     int outgoing, incoming;
@@ -38,19 +39,31 @@ void process_vertex_late(int v)
     //find SCC OF p[v] and v then put in a SCCpv -> SCCv edge if none exists
     /*printf("strong commonent started backtracking from %d\n",v);*/
     pop_component(v);
+//    printf("1");
+//    fflush(stdout);
     outgoing =  find_strong_id(parent[v]);//this probably won't work
+//    printf("2");
+//    fflush(stdout);
+    
     incoming = find_strong_id(v);
+//    printf("3");
+//    fflush(stdout);
+   
     //create the node v within the SCC graph with an edge from o to i
-    strong.insert_edge(/*blahblahblah*/);
+    insert_edge( &strongForward, outgoing, incoming, 1 ); /*one with outgoing(parent)->incoming(v)*/
+//    printf("4");
+//    fflush(stdout);
+
+    insert_edge( &strongBackward, incoming, outgoing, 1 ); /*one with incoming(v)->outgoing(parent)*/
   }
   if (entry_time[low[v]] < entry_time[low[parent[v]]])
     low[parent[v]] = low[v];
-
+  
   return;
 }
 
 int find_strong_id(int n){
-   if(scc[n] != NULL && n <= g->nvertices){
+   if(scc[n] != NULL){
       return(scc[n]);
    }
    return(-1);
@@ -172,10 +185,11 @@ int main(int argc, char* argv[])
   int i;
 
   read_graph(&g,TRUE);
-  print_graph(&g);
+//  print_graph(&g);
 
   strong_components(&g);
-  
+  print_graph(&strongForward);
+  print_graph(&strongBackward);
   //if(id_one_component(&g))
   //  printf("All of the above vertices are Sources and Sponges because there is only one component.\n");
   
