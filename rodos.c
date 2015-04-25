@@ -13,6 +13,7 @@ extern int exit_time[];		/* time of vertex exit */
 int low[MAXV+1];		/* oldest vertex surely in component of v */
 int scc[MAXV+1];		/* strong component number for each vertex */
 
+
 stack active;			/* active vertices of unassigned component */
 int components_found;		/* number of strong components identified */
 int edges_found;
@@ -48,8 +49,8 @@ void process_vertex_late(int v)
 //    fflush(stdout);
     
 //    incoming = find_strong_id(v);
-//    printf("3");
-//    fflush(stdout);
+    printf("%d\n", parent[v]);
+    fflush(stdout);
    
     //create the node v within the SCC graph with an edge from o to i
 //    insert_edge( &strongForward, outgoing, incoming, 1 ); /*one with outgoing(parent)->incoming(v)*/
@@ -186,10 +187,9 @@ void strongMaker(graph *g){
   g->nvertices = components_found;
  // g->nedges = edges_found;
   int i; 
-//  for(i=1; i<edges_found;i++){
-    insert_edge( &g, 1, 3, TRUE );
-//    insert_edge( &g, 1,2 , 1 ); 
-//  }  
+  for(i=1; i<edges_found;i++){
+  //  insert_edge( g, , , TRUE );
+  }  
    return;
 
 }
@@ -209,7 +209,7 @@ int main(int argc, char* argv[])
   initialize_graph(&strongBackward, TRUE);
   strongMaker(&strongForward);
 //  strongMaker(&strongBackward);
-//  print_graph(&strongForward);
+  print_graph(&strongForward);
 //  print_graph(&strongBackward);
   //if(id_one_component(&g))
   
