@@ -15,6 +15,7 @@ int scc[MAXV+1];		/* strong component number for each vertex */
 
 stack active;			/* active vertices of unassigned component */
 int components_found;		/* number of strong components identified */
+int edges_found;
 graph strongForward; 			/* Strong components graph */
 graph strongBackward;
 
@@ -39,22 +40,23 @@ void process_vertex_late(int v)
     //find SCC OF p[v] and v then put in a SCCpv -> SCCv edge if none exists
     /*printf("strong commonent started backtracking from %d\n",v);*/
     pop_component(v);
+    edges_found++;
 //    printf("1");
 //    fflush(stdout);
-    outgoing =  find_strong_id(parent[v]);//this probably won't work
+//    outgoing = 1; //find_strong_id(parent[v]);//this probably won't work
 //    printf("2");
 //    fflush(stdout);
     
-    incoming = find_strong_id(v);
+//    incoming = find_strong_id(v);
 //    printf("3");
 //    fflush(stdout);
    
     //create the node v within the SCC graph with an edge from o to i
-    insert_edge( &strongForward, outgoing, incoming, 1 ); /*one with outgoing(parent)->incoming(v)*/
-//    printf("4");
+//    insert_edge( &strongForward, outgoing, incoming, 1 ); /*one with outgoing(parent)->incoming(v)*/
+//    printf("%d %d\n", outgoing,incoming);
 //    fflush(stdout);
 
-    insert_edge( &strongBackward, incoming, outgoing, 1 ); /*one with incoming(v)->outgoing(parent)*/
+//    insert_edge( &strongBackward, incoming, outgoing, 1 ); /*one with incoming(v)->outgoing(parent)*/
   }
   if (entry_time[low[v]] < entry_time[low[parent[v]]])
     low[parent[v]] = low[v];
@@ -126,7 +128,7 @@ void strong_components(graph *g)
   
 
   components_found = 0;
-
+  edges_found = 0;
   init_stack(&active);
   initialize_search(&g);
 
@@ -136,6 +138,8 @@ void strong_components(graph *g)
       
       /*pop_component(i);*/
     }
+ // printf("done");
+ // fflush(stdout);
 }
 
 
@@ -178,6 +182,17 @@ int id_mul_component(graph *g)
 }
 
 
+void strongMaker(graph *g){
+  g->nvertices = components_found;
+ // g->nedges = edges_found;
+  int i; 
+//  for(i=1; i<edges_found;i++){
+    insert_edge( &g, 1, 3, TRUE );
+//    insert_edge( &g, 1,2 , 1 ); 
+//  }  
+   return;
+
+}
       // End user created methods
 int main(int argc, char* argv[])
 {
@@ -185,13 +200,18 @@ int main(int argc, char* argv[])
   int i;
 
   read_graph(&g,TRUE);
-//  print_graph(&g);
-
+  print_graph(&g);
+ 
   strong_components(&g);
-  print_graph(&strongForward);
-  print_graph(&strongBackward);
+  initialize_graph(&strongForward, TRUE);
+//  strongForward.nvertices = 3;
+//  strongForward.nedges = 3;
+  initialize_graph(&strongBackward, TRUE);
+  strongMaker(&strongForward);
+//  strongMaker(&strongBackward);
+//  print_graph(&strongForward);
+//  print_graph(&strongBackward);
   //if(id_one_component(&g))
-  //  printf("All of the above vertices are Sources and Sponges because there is only one component.\n");
   
       
   return 0;

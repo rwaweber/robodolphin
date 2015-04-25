@@ -62,22 +62,15 @@ read_graph(graph *g, bool directed)
 
 insert_edge(graph *g, int x, int y, bool directed)
 {
-	edgenode *p;			/* temporary pointer */
+	printf("test %d %d\n", x , y);
+        edgenode *p;			/* temporary pointer */
 
 	p = malloc(sizeof(edgenode));	/* allocate storage for edgenode */
 
 	p->weight = NULL;
-//	printf("check1\n");
-//	fflush(stdout);
 	p->y = y;
-//        printf("check2\n");
-//        fflush(stdout);
 	p->next = g->edges[x];
-//        printf("check3\n");
-//        fflush(stdout);
 	g->edges[x] = p;		/* insert at head of list */
-//        printf("check4\n");
-//        fflush(stdout);
 	g->degree[x] ++;
 
 	if (directed == FALSE)
